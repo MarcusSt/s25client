@@ -86,6 +86,10 @@ bool TerritoryRegion::IsPointValid(GameWorldBase* gwb, std::vector< Point<MapCoo
 
 void TerritoryRegion::TestNode( int x,  int y, const unsigned char player, const unsigned char radius, const bool check_barriers)
 {
+    // check whether his node is within the area we may have territory in
+    if (check_barriers && !IsPointValid(gwb, gwb->GetPlayer(player)->GetRestrictedArea(), x, y))
+        return;
+    
     // Gucken, ob der Punkt überhaupt mit in diese Region gehört
     if(x + gwb->GetWidth() >= int(x1) && x + gwb->GetWidth() < int(x2))
         x += gwb->GetWidth();
@@ -99,10 +103,6 @@ void TerritoryRegion::TestNode( int x,  int y, const unsigned char player, const
     else if(y - gwb->GetHeight() >= int(y1) && y - gwb->GetHeight() < int(y2))
         y -= gwb->GetHeight();
     else if(y < int(y1) || y >= int(y2))
-        return;
-
-    // check whether his node is within the area we may have territory in
-    if (check_barriers && !IsPointValid(gwb, gwb->GetPlayer(player)->GetRestrictedArea(), x, y))
         return;
 
     /// Wenn das Militargebäude jetzt näher dran ist, dann geht dieser Punkt in den Besitz vom jeweiligen Spieler
