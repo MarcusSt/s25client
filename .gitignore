@@ -22,3 +22,4 @@ backup_*
 DATA
 GFX
 *.bak
+*~
