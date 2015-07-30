@@ -330,11 +330,10 @@ unsigned short nobMilitary::GetMilitaryRadius() const
 void nobMilitary::LookForEnemyBuildings(const nobBaseMilitary* const exception)
 {
     // Umgebung nach Militärgebäuden absuchen
-    std::list<nobBaseMilitary*> buildings;
-    gwg->LookForMilitaryBuildings(buildings, x, y, 3);
+    nobBaseMilitarySet buildings = gwg->LookForMilitaryBuildings(x, y, 3);
     frontier_distance = 0;
 
-    for(std::list<nobBaseMilitary*>::iterator it = buildings.begin(); it != buildings.end(); ++it)
+    for(nobBaseMilitarySet::iterator it = buildings.begin(); it != buildings.end(); ++it)
     {
         // feindliches Militärgebäude?
         if(*it != exception && (*it)->GetPlayer() != player && gwg->GetPlayer((*it)->GetPlayer())->IsPlayerAttackable(player))
@@ -986,10 +985,9 @@ void nobMilitary::Capture(const unsigned char new_owner)
     // Grenzflagge entsprechend neu setzen von den Feinden
     LookForEnemyBuildings();
     // und von den Verbündeten (da ja ein Feindgebäude weg ist)!
-    std::list<nobBaseMilitary*> buildings;
-    gwg->LookForMilitaryBuildings(buildings, x, y, 4);
+    nobBaseMilitarySet buildings = gwg->LookForMilitaryBuildings(x, y, 4);
 
-    for(std::list<nobBaseMilitary*>::iterator it = buildings.begin(); it != buildings.end(); ++it)
+    for(nobBaseMilitarySet::iterator it = buildings.begin(); it != buildings.end(); ++it)
     {
         // verbündetes Gebäude?
         if(gwg->GetPlayer((*it)->GetPlayer())->IsPlayerAttackable(old_player)

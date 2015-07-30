@@ -160,7 +160,7 @@ class AIInterface
 		nobBaseWarehouse* FindWarehouse(const noRoadNode* const start, bool (*IsWarehouseGood)(nobBaseWarehouse*, const void*), const RoadSegment* const forbidden, const bool to_wh, const void* param, const bool use_boat_roads, unsigned* const length = 0);
 		
         /// Returns a list of military buildings around a given point and a given radius
-        void GetMilitaryBuildings(MapCoord x, MapCoord y, unsigned radius, std::list<nobBaseMilitary*> &miliaryBuildings) const { gwb->LookForMilitaryBuildings(miliaryBuildings, x, y, radius); }
+        nobBaseMilitarySet GetMilitaryBuildings(MapCoord x, MapCoord y, unsigned radius) const { return(gwb->LookForMilitaryBuildings(x, y, radius)); }
 
         /// Returns the headquarter of the player (or null if destroyed)
         const nobHQ* GetHeadquarter() const;

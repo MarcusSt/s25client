@@ -1902,13 +1902,11 @@ void AIPlayerJH::TryToAttack()
         }
 
         // get nearby enemy buildings and store in set of potential attacking targets
-        std::list<nobBaseMilitary*> buildings;
-
         MapCoord src_x = (*it)->GetX();
         MapCoord src_y = (*it)->GetY();
 
-        aii->GetMilitaryBuildings(src_x, src_y, 2, buildings);
-        for(std::list<nobBaseMilitary*>::iterator target = buildings.begin(); target != buildings.end(); ++target)
+        nobBaseMilitarySet buildings = aii->GetMilitaryBuildings(src_x, src_y, 2);
+        for(nobBaseMilitarySet::iterator target = buildings.begin(); target != buildings.end(); ++target)
         {
             if ((*target)->GetGOT() == GOT_NOB_MILITARY)
             {
@@ -1951,9 +1949,8 @@ void AIPlayerJH::TryToAttack()
         unsigned attackersStrength = 0;
 
         // ask each of nearby own military buildings for soldiers to contribute to the potential attack
-        std::list<nobBaseMilitary*> myBuildings;
-        aii->GetMilitaryBuildings(dest_x, dest_y, 2, myBuildings);
-        for(std::list<nobBaseMilitary*>::iterator it3 = myBuildings.begin(); it3 != myBuildings.end(); ++it3)
+        nobBaseMilitarySet myBuildings = aii->GetMilitaryBuildings(dest_x, dest_y, 2);
+        for(nobBaseMilitarySet::iterator it3 = myBuildings.begin(); it3 != myBuildings.end(); ++it3)
         {
             if ((*it3)->GetPlayer() == playerid)
             {
@@ -2087,9 +2084,8 @@ void AIPlayerJH::TrySeaAttack()
     {
         limit--;
         //now add all military buildings around the harborspot to our list of potential targets
-        std::list<nobBaseMilitary*> buildings;
-        aii->GetMilitaryBuildings(gwb->GetHarborPoint(searcharoundharborspots[i]).x, gwb->GetHarborPoint(searcharoundharborspots[i]).y, 2, buildings);
-        for(std::list<nobBaseMilitary*>::const_iterator it = buildings.begin(); it != buildings.end(); it++)
+        nobBaseMilitarySet buildings = aii->GetMilitaryBuildings(gwb->GetHarborPoint(searcharoundharborspots[i]).x, gwb->GetHarborPoint(searcharoundharborspots[i]).y, 2);
+        for(nobBaseMilitarySet::const_iterator it = buildings.begin(); it != buildings.end(); it++)
         {
             if(aii->IsPlayerAttackable((*it)->GetPlayer()) && aii->IsVisible((*it)->GetX(), (*it)->GetY()))
             {

@@ -195,9 +195,8 @@ void AIConstruction::FindFlags(std::vector<const noFlag*>& flags, unsigned short
     /*
     if (radius > 10)
     {
-        list<nobBaseMilitary*> military;
-        gwb->LookForMilitaryBuildings(military, x, y, 2);
-        for(list<nobBaseMilitary*>::iterator it = military.begin();it.valid();++it)
+        nobBaseMilitarySet military = gwb->LookForMilitaryBuildings(military, x, y, 2);
+        for(nobBaseMilitarySet::iterator it = military.begin();it.valid();++it)
         {
             unsigned distance = gwb->CalcDistance((*it)->GetX(), (*it)->GetY(), x, y);
             if (distance < radius && (*it)->GetPlayer() == player->getPlayerID())
@@ -244,9 +243,9 @@ bool AIConstruction::MilitaryBuildingWantsRoad(nobMilitary* milbld, unsigned lis
 
 bool AIConstruction::ConnectFlagToRoadSytem(const noFlag* flag, std::vector<unsigned char>& route, unsigned int maxSearchRadius)
 {
-    // TODO: die methode kann  ganz schön böse Laufzeiten bekommen... Optimieren?
+    // TODO: die methode kann  ganz sch\F6n b\F6se Laufzeiten bekommen... Optimieren?
 
-    // Radius in dem nach würdigen Fahnen gesucht wird
+    // Radius in dem nach w\FCrdigen Fahnen gesucht wird
     //const unsigned short maxSearchRadius = 10;
 
 	//flag of a military building? -> check if we really want to connect this right now
@@ -268,7 +267,7 @@ bool AIConstruction::ConnectFlagToRoadSytem(const noFlag* flag, std::vector<unsi
 			listpos++;
 		}
 	}
-    // Ziel, das möglichst schnell erreichbar sein soll
+    // Ziel, das m\F6glichst schnell erreichbar sein soll
     //noFlag *targetFlag = gwb->GetSpecObj<nobHQ>(player->hqx, player->hqy)->GetFlag();
     noFlag* targetFlag = FindTargetStoreHouseFlag(flag->GetX(), flag->GetY());
 
@@ -297,10 +296,10 @@ bool AIConstruction::ConnectFlagToRoadSytem(const noFlag* flag, std::vector<unsi
 		// the flag should not be at a military building!		
 		if (aii->IsMilitaryBuildingOnNode(aii->GetXA(flags[i]->GetX(),flags[i]->GetY(),1),aii->GetYA(flags[i]->GetX(),flags[i]->GetY(),1)))
 			continue;
-        // Gibts überhaupt einen Pfad zu dieser Flagge
+        // Gibts \FCberhaupt einen Pfad zu dieser Flagge
         bool pathFound = aii->FindFreePathForNewRoad(flag->GetX(), flag->GetY(), flags[i]->GetX(), flags[i]->GetY(), &tmpRoute, &length);
 
-        // Wenn ja, dann gucken ob dieser Pfad möglichst kurz zum "höheren" Ziel (allgemeines Lager im Moment) ist
+        // Wenn ja, dann gucken ob dieser Pfad m\F6glichst kurz zum "h\F6heren" Ziel (allgemeines Lager im Moment) ist
         if (pathFound)
         {
             unsigned int distance = 0;
@@ -327,9 +326,9 @@ bool AIConstruction::ConnectFlagToRoadSytem(const noFlag* flag, std::vector<unsi
             // Strecke von der potenziellen Zielfahne bis zum Lager
             bool pathFound = aii->FindPathOnRoads(flags[i], targetFlag, &distance);
 
-            // Gewählte Fahne hat leider auch kein Anschluß an ein Lager, zu schade!
+            // Gew\E4hlte Fahne hat leider auch kein Anschlu\DF an ein Lager, zu schade!
             if (!pathFound)
-                // Und ist auch nicht zufällig die Lager-Flagge selber...
+                // Und ist auch nicht zuf\E4llig die Lager-Flagge selber...
                 if (flags[i]->GetX() != targetFlag->GetX() || flags[i]->GetY() != targetFlag->GetY())
                     continue;
 
@@ -340,8 +339,8 @@ bool AIConstruction::ConnectFlagToRoadSytem(const noFlag* flag, std::vector<unsi
             // Ansonsten haben wir einen Pfad!
             found = true;
 
-            // Kürzer als der letzte? Nehmen! Existierende Strecke höher gewichten (2), damit möglichst kurze Baustrecken
-            // bevorzugt werden bei ähnlich langen Wegmöglichkeiten
+            // K\FCrzer als der letzte? Nehmen! Existierende Strecke h\F6her gewichten (2), damit m\F6glichst kurze Baustrecken
+            // bevorzugt werden bei \E4hnlich langen Wegm\F6glichkeiten
             if (2 * length + distance + 10 * size < shortestLength)
             {
                 shortest = i;
@@ -423,11 +422,11 @@ bool AIConstruction::BuildRoad(const noRoadNode* start, const noRoadNode* target
     }
     else
     {
-        // Wenn Route übergeben wurde, davon ausgehen dass diese auch existiert
+        // Wenn Route \FCbergeben wurde, davon ausgehen dass diese auch existiert
         foundPath = true;
     }
 
-    // Wenn Pfad gefunden, Befehl zum Straße bauen und Flagen setzen geben
+    // Wenn Pfad gefunden, Befehl zum Stra\DFe bauen und Flagen setzen geben
     if (foundPath)
     {
         MapCoord x = start->GetX();
@@ -481,13 +480,13 @@ BuildingType AIConstruction::ChooseMilitaryBuilding(MapCoord x, MapCoord y)
 		bld = BLD_FORTRESS;
 		return bld;
 	}
-    std::list<nobBaseMilitary*> military;
-    aii->GetMilitaryBuildings(x, y, 3, military);
-    for(std::list<nobBaseMilitary*>::iterator it = military.begin(); it != military.end(); ++it)
+	
+    nobBaseMilitarySet military = aii->GetMilitaryBuildings(x, y, 3);
+    for(nobBaseMilitarySet::iterator it = military.begin(); it != military.end(); ++it)
     {
         unsigned distance = aii->GetDistance((*it)->GetX(), (*it)->GetY(), x, y);
 
-        // Prüfen ob Feind in der Nähe
+        // Pr\FCfen ob Feind in der N\E4he
         if ((*it)->GetPlayer() != playerID && distance < 35)
         {
             int randmil = rand();
@@ -745,9 +744,9 @@ void AIConstruction::InitBuildingsWanted()
 bool AIConstruction::BuildAlternativeRoad(const noFlag* flag, std::vector<unsigned char> &route)
 {
     //LOG.lprintf("ai build alt road player %i at %i %i\n", flag->GetPlayer(), flag->GetX(),flag->GetY());
-    // Radius in dem nach würdigen Fahnen gesucht wird
+    // Radius in dem nach w\FCrdigen Fahnen gesucht wird
     const unsigned short maxRoadLength = 10;
-    // Faktor um den der Weg kürzer sein muss als ein vorhander Pfad, um gebaut zu werden
+    // Faktor um den der Weg k\FCrzer sein muss als ein vorhander Pfad, um gebaut zu werden
     const unsigned short lengthFactor = 5;
 
 
@@ -773,10 +772,10 @@ bool AIConstruction::BuildAlternativeRoad(const noFlag* flag, std::vector<unsign
 		// the flag should not be at a military building!		
 		if (aii->IsMilitaryBuildingOnNode(aii->GetXA(flags[i]->GetX(),flags[i]->GetY(),1),aii->GetYA(flags[i]->GetX(),flags[i]->GetY(),1)))
 			continue;
-        // Gibts überhaupt einen Pfad zu dieser Flagge
+        // Gibts \FCberhaupt einen Pfad zu dieser Flagge
         bool pathFound = aii->FindFreePathForNewRoad(flag->GetX(), flag->GetY(), flags[i]->GetX(), flags[i]->GetY(), &route, &newLength);
 
-        // Wenn ja, dann gucken ob unser momentaner Weg zu dieser Flagge vielleicht voll weit ist und sich eine Straße lohnt
+        // Wenn ja, dann gucken ob unser momentaner Weg zu dieser Flagge vielleicht voll weit ist und sich eine Stra\DFe lohnt
         if (pathFound)
         {
             unsigned int oldLength = 0;
@@ -822,7 +821,7 @@ bool AIConstruction::BuildAlternativeRoad(const noFlag* flag, std::vector<unsign
             if(size > 2 || crossmainpath)
                 continue;
 
-            // Lohnt sich die Straße?
+            // Lohnt sich die Stra\DFe?
             if (!pathAvailable || newLength * lengthFactor < oldLength)
             {
                 return BuildRoad(flag, flags[i], route);

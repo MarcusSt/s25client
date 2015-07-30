@@ -20,6 +20,7 @@
 #ifndef NOB_BASEMILITARY_H_
 #define NOB_BASEMILITARY_H_
 
+#include <set>
 #include "noBuilding.h"
 #include "BuildingConsts.h"
 #include "GameConsts.h"
@@ -148,10 +149,17 @@ class nobBaseMilitary : public noBuilding
 
         // Vergleicht Gebäude anhand ihrer Bauzeit, um eine geordnete Reihenfolge hinzubekommen
         static bool Compare(const nobBaseMilitary* const one, const nobBaseMilitary* const two)
-        { return (*one) < (*two); }
+	        { return (*one) < (*two); }
+        
+        struct Comparer
+        {
+            bool operator()(const nobBaseMilitary* const one, const nobBaseMilitary* const two) const
+            {
+                return (*one) < (*two);
+            }
+        };
 };
 
-
-
+typedef std::set<nobBaseMilitary*, nobBaseMilitary::Comparer> nobBaseMilitarySet;
 
 #endif //! NOB_BASEMILITARY_H_

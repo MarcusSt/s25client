@@ -33,6 +33,7 @@
 #include <cstddef>
 #include "GamePlayerList.h"
 #include "TradeGraph.h"
+#include "nobBaseMilitary.h"
 
 class noEnvObject;
 class noGranite;
@@ -318,7 +319,7 @@ class GameWorldBase
         bool IsMilitaryBuilding(const MapCoord x, const MapCoord y) const;
 
         /// Erstellt eine Liste mit allen Militärgebäuden in der Umgebung, radius bestimmt wie viele Kästchen nach einer Richtung im Umkreis
-        void LookForMilitaryBuildings(std::list<nobBaseMilitary*>& buildings, const MapCoord x, const MapCoord y, unsigned short radius) const;
+        nobBaseMilitarySet LookForMilitaryBuildings(const MapCoord x, const MapCoord y, unsigned short radius) const;
 
         /// Prüft, ob von einem bestimmten Punkt aus der Untergrund für Figuren zugänglich ist (kein Wasser,Lava,Sumpf)
         bool IsNodeToNodeForFigure(const MapCoord x, const MapCoord y, const unsigned dir) const;

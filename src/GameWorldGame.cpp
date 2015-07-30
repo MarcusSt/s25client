@@ -534,10 +534,8 @@ void GameWorldGame::RecalcTerritory(const noBaseBuilding* const building, const 
 	unsigned char owneroftriggerbuilding = GetNode(building->GetX(),building->GetY()).owner;
 	unsigned char new_owner_of_trigger_building;
 
-    std::list<nobBaseMilitary*> buildings; // Liste von Militärgebäuden in der Nähe
-
     // alle Militärgebäude in der Nähe abgrasen
-    LookForMilitaryBuildings(buildings, building->GetX(), building->GetY(), 3);
+    nobBaseMilitarySet buildings = LookForMilitaryBuildings(building->GetX(), building->GetY(), 3);
 
     // Radius der noch draufaddiert wird auf den eigentlich ausreichenden Bereich, für das Eliminieren von
     // herausragenden Landesteilen und damit Grenzsteinen
@@ -552,10 +550,8 @@ void GameWorldGame::RecalcTerritory(const noBaseBuilding* const building, const 
 
     TerritoryRegion tr(x1, y1, x2, y2, this);
 
-    buildings.sort(nobBaseMilitary::Compare);
-
     // Alle Gebäude ihr Terrain in der Nähe neu berechnen
-    for(std::list<nobBaseMilitary*>::iterator it = buildings.begin(); it != buildings.end(); ++it)
+    for(nobBaseMilitarySet::iterator it = buildings.begin(); it != buildings.end(); ++it)
     {
         // Ist es ein richtiges Militärgebäude?
         if((*it)->GetBuildingType() >= BLD_BARRACKS && (*it)->GetBuildingType() <= BLD_FORTRESS)
@@ -821,10 +817,8 @@ void GameWorldGame::RecalcTerritory(const noBaseBuilding* const building, const 
 
 bool GameWorldGame::TerritoryChange(const noBaseBuilding* const building, const unsigned short radius, const bool destroyed, const bool newBuilt)
 {
-    std::list<nobBaseMilitary*> buildings; // Liste von Militärgebäuden in der Nähe
-
     // alle Militärgebäude in der Nähe abgrasen
-    LookForMilitaryBuildings(buildings, building->GetX(), building->GetY(), 3);
+    nobBaseMilitarySet buildings = LookForMilitaryBuildings(building->GetX(), building->GetY(), 3);
 
     // Radius der noch draufaddiert wird auf den eigentlich ausreichenden Bereich, für das Eliminieren von
     // herausragenden Landesteilen und damit Grenzsteinen
@@ -839,10 +833,8 @@ bool GameWorldGame::TerritoryChange(const noBaseBuilding* const building, const 
 
     TerritoryRegion tr(x1, y1, x2, y2, this);
 
-    buildings.sort(nobBaseMilitary::Compare);
-
     // Alle Gebäude ihr Terrain in der Nähe neu berechnen
-    for(std::list<nobBaseMilitary*>::iterator it = buildings.begin(); it != buildings.end(); ++it)
+    for(nobBaseMilitarySet::iterator it = buildings.begin(); it != buildings.end(); ++it)
     {
         // Ist es ein richtiges Militärgebäude?
         if((*it)->GetBuildingType() >= BLD_BARRACKS && (*it)->GetBuildingType() <= BLD_FORTRESS)
@@ -1052,14 +1044,13 @@ void GameWorldGame::Attack(const unsigned char player_attacker, const MapCoord x
     }
 
     // Militärgebäude in der Nähe finden
-    std::list<nobBaseMilitary*> buildings;
-    LookForMilitaryBuildings(buildings, x, y, 3);
+    nobBaseMilitarySet buildings = LookForMilitaryBuildings(x, y, 3);
 
     // Liste von verfügbaren Soldaten, geordnet einfügen, damit man dann starke oder schwache Soldaten nehmen kann
     list<PotentialAttacker> soldiers;
 
 
-    for(std::list<nobBaseMilitary*>::iterator it = buildings.begin(); it != buildings.end(); ++it)
+    for(nobBaseMilitarySet::iterator it = buildings.begin(); it != buildings.end(); ++it)
     {
         // Muss ein Gebäude von uns sein und darf nur ein "normales Militärgebäude" sein (kein HQ etc.)
         if((*it)->GetPlayer() == player_attacker && (*it)->GetBuildingType() >= BLD_BARRACKS && (*it)->GetBuildingType() <= BLD_FORTRESS)
@@ -1403,11 +1394,10 @@ bool GameWorldGame::ValidPointForFighting(const MapCoord x, const MapCoord y, co
 
 bool GameWorldGame::IsPointCompletelyVisible(const MapCoord x, const MapCoord y, const unsigned char player, const noBaseBuilding* const exception) const
 {
-    std::list<nobBaseMilitary*> buildings;
-    LookForMilitaryBuildings(buildings, x, y, 3);
+    nobBaseMilitarySet buildings = LookForMilitaryBuildings(x, y, 3);
 
     // Sichtbereich von Militärgebäuden
-    for(std::list<nobBaseMilitary*>::iterator it = buildings.begin(); it != buildings.end(); ++it)
+    for(nobBaseMilitarySet::iterator it = buildings.begin(); it != buildings.end(); ++it)
     {
         if((*it)->GetPlayer() == player && *it != exception)
         {
