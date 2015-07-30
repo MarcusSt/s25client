@@ -16,7 +16,6 @@ Release
 /RTTR/*.dll
 /RTTR/*.exe
 /win32/bin/*
-
 backup_*
 !/contrib
 DATA
