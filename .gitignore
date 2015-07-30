@@ -23,3 +23,7 @@ DATA
 GFX
 *.bak
 *~
+RTTR/s-c_resample
+RTTR/s25update
+RTTR/sound-convert
+build/
