@@ -148,7 +148,7 @@ void GameClient::ReplayInfo::Clear()
  */
 GameClient::GameClient(void)
     : recv_queue(&GameMessage::create_game), send_queue(&GameMessage::create_game),
-      human_ai(NULL), ci(NULL)
+      ci(NULL), human_ai(NULL)
 {
     clientconfig.Clear();
     framesinfo.Clear();
@@ -1605,17 +1605,6 @@ void GameClient::ExecuteGameFrame(const bool skipping)
         // Frame-Time setzen zum Zeichnen, (immer auÃŸer bei Lags)
         framesinfo.frame_time = currenttime - framesinfo.lasttime;
     }
-    
-    if (human_ai)
-    {
-    	human_ai->RunGF(framesinfo.nr, (framesinfo.nr % framesinfo.nwf_length == 0));
-    	
-    	std::vector<gc::GameCommand*> ai_gcs = human_ai->GetGameCommands();
-    	
-    	gcs.insert(gcs.end(), ai_gcs.begin(), ai_gcs.end());
-    	
-		human_ai->FetchGameCommands();
-    }
 }
 
 /// Führt notwendige Dinge für nächsten GF aus
@@ -1636,6 +1625,17 @@ void GameClient::NextGF()
             // Bündnisse auf Aktualität überprüfen
             players[i].TestPacts();
         }
+    }
+    
+    if (human_ai)
+    {
+    	human_ai->RunGF(framesinfo.nr, (framesinfo.nr % framesinfo.nwf_length == 0));
+    	
+    	std::vector<gc::GameCommand*> ai_gcs = human_ai->GetGameCommands();
+    	
+    	gcs.insert(gcs.end(), ai_gcs.begin(), ai_gcs.end());
+    	
+		human_ai->FetchGameCommands();
     }
     
     gw->LUA_EventGF(framesinfo.nr);

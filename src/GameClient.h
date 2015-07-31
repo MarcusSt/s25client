@@ -272,7 +272,6 @@ class GameClient : public Singleton<GameClient>, public GameMessageInterface
 		/// skip ahead how many gf?
 		unsigned int skiptogf;
     private:
-    	AIBase *human_ai;
         /// Spielwelt
         GameWorld* gw;
         /// EventManager
@@ -362,6 +361,9 @@ class GameClient : public Singleton<GameClient>, public GameMessageInterface
 
         ClientInterface* ci;
 
+		// AI running in addition to a human player
+    	AIBase *human_ai;
+    	
         /// GameCommands, die vom Client noch an den Server gesendet werden müssen
         std::vector<gc::GameCommand*> gcs;
 
