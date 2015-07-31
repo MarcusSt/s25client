@@ -37,7 +37,7 @@ class GlobalGameSettings
         void Deserialize(Serializer* ser);
 
     public:
-        enum GameSpeed { GS_VERYSLOW = 0, GS_SLOW , GS_NORMAL, GS_FAST, GS_VERYFAST } game_speed;
+        enum GameSpeed { GS_VERYSLOW = 0, GS_SLOW , GS_NORMAL, GS_FAST, GS_VERYFAST, GS_EXTREMELYFAST } game_speed;
         enum GameObjective { GO_NONE = 0, GO_CONQUER3_4, GO_TOTALDOMINATION } game_objective;
         enum StartWares {SWR_VLOW = 0, SWR_LOW, SWR_NORMAL, SWR_ALOT} start_wares;
         bool lock_teams;

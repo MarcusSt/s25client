@@ -154,7 +154,8 @@ dskHostGame::dskHostGame(bool single_player) :
     combo->AddString(_("Normal")); // Normal
     combo->AddString(_("Fast")); // Schnell
     combo->AddString(_("Very fast")); // Sehr Schnell
-
+    combo->AddString(_("Extremely fast"));
+	
     // Karte laden, um Kartenvorschau anzuzeigen
     if(GameClient::inst().GetMapType() == MAPTYPE_OLDMAP)
     {
